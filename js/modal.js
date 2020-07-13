@@ -67,19 +67,22 @@ function signup() {
     `;
     modal_footer.innerHTML = `
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-    <input type="submit" id="signup-submit" class="btn btn-primary" data-dismiss="modal" value="Submit"/>
+    <input type="submit" id="signup-submit" class="btn btn-primary" value="Submit"/>
     `;
 
     const submit_button = document.getElementById('signup-submit');
+    const alert_banner = document.getElementById('alert');
     submit_button.addEventListener('click', (e) => {
         const signup_username = document.getElementById('signup-username').value;
         const signup_password = document.getElementById('signup-password').value;
         const request = new Ajax({signup_username, signup_password});
         request.post()
             .then(r => {
-                console.log(r.status === -1);
-                if (r.status === -1) {
-                    alert(r.message);
+                if (r.status === false) {
+                    alert_banner.innerText = `Error: ${r.message}`;
+                    alert_banner.hidden = false;
+                } else {
+                    $('#modal').modal('hide');
                 }
             });
         e.preventDefault();

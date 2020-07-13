@@ -3,6 +3,7 @@ require_once('src/header.php');
 
 function respondJson($data)
 {
+    ob_end_clean();
     header('Content-Type: application/json');
     echo json_encode($data);
     exit();
@@ -17,13 +18,20 @@ if (isset($data['login_username'])) {
 }
 
 if (isset($data['signup_username'])) {
-    $username = $data['signup_username'];
-    $password = $data['signup_password'];
+    $username = trim($data['signup_username']);
+    $password = trim($data['signup_password']);
     $data = array();
     if (empty($username)) {
-        $data = ['status' => -1, 'message' => 'Username cannot be empty'];
+        $data = ['status' => false, 'message' => 'Username cannot be empty'];
+    } elseif (empty($password)) {
+        $data = ['status' => false, 'message' => 'Password cannot be empty'];
     } else {
-        $data = ['status' => 'signup', 'message' => $data['signup_password']];
+        $status = User::createUser($username, $password);
+        if ($status) {
+            $data = ['status' => true];
+        } else {
+            $data = ['status' => false, 'message' => 'User already exists'];
+        }
     }
     respondJson($data);
 
@@ -67,7 +75,7 @@ if (isset($data['signup_username'])) {
                 </div>
             </li>
         </ul>
-        <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav navbar-right" id="user-actions">
             <li class="nav-item"><a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal">Login</a>
             </li>
             <li class="nav-item"><a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal">Sign

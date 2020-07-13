@@ -13,7 +13,9 @@ class Ajax {
                 body: JSON.stringify(this.data)
             });
 
-            return await response.json();
+            let resData;
+            resData = await response.json();
+            return resData;
         }
     }
 
