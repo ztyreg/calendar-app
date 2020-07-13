@@ -1,0 +1,155 @@
+<?php
+require_once('src/header.php');
+
+if (isset($_POST['submit'])) {
+    echo $_POST['username'];
+}
+
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Calendar</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#calendar">Calendar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#calendar">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#modal">About</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Actions
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" data-toggle="modal" data-target="#modal">Create event</a>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#modal">Share calendar</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item"><a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal">Login</a></li>
+            <li class="nav-item"><a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal">Sign up</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3 bg-light" style="max-width: 300px">
+            <div class="row mt-3">
+                <div class="col">
+                    <h1 class="year-heading">
+                        <span id="cur-year"></span>
+                    </h1>
+                    <h1 class="month-heading">
+                        <span id="cur-month"></span>
+                    </h1>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <h3 class="choose-month">
+                        <button id="prev-month" class="btn btn-secondary"><</button>
+                        <button id="today-month" class="btn btn-secondary">Today</button>
+                        <button id="next-month" class="btn btn-secondary">></button>
+                    </h3>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <button id="prev-month" class="btn btn-secondary">New event</button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <h5>Tags</h5>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <h5>Shared with me</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="row mt-3">
+                <div class="col">
+                    <h1 id="app-name-landscape">My Calendar</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table border mt-3" id="calendar">
+                        <thead id="calendar-head">
+                        <tr>
+                            <th class="border weekday">MON</th>
+                            <th class="border weekday">TUE</th>
+                            <th class="border weekday">WED</th>
+                            <th class="border weekday">THU</th>
+                            <th class="border weekday">FRI</th>
+                            <th class="border weekday">SAT</th>
+                            <th class="border weekday">SUN</th>
+                        </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                Test
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <input type="submit" name="submit" id="modal-submit" class="btn btn-primary" form="modalForm" value="Submit"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<script src="js/modal.js"></script>
+<script src="js/date.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/month.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
