@@ -1,9 +1,34 @@
 <?php
 require_once('src/header.php');
 
-if (isset($_POST['submit'])) {
-    echo $_POST['username'];
+function respondJson($data)
+{
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit();
 }
+
+
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (isset($data['login_username'])) {
+    $data = ['name' => 'God', 'age' => -1];
+    respondJson($data);
+}
+
+if (isset($data['signup_username'])) {
+    $username = $data['signup_username'];
+    $password = $data['signup_password'];
+    $data = array();
+    if (empty($username)) {
+        $data = ['status' => -1, 'message' => 'Username cannot be empty'];
+    } else {
+        $data = ['status' => 'signup', 'message' => $data['signup_password']];
+    }
+    respondJson($data);
+
+}
+
 
 ?>
 <!doctype html>
@@ -43,8 +68,10 @@ if (isset($_POST['submit'])) {
             </li>
         </ul>
         <ul class="navbar-nav navbar-right">
-            <li class="nav-item"><a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal">Login</a></li>
-            <li class="nav-item"><a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal">Sign up</a></li>
+            <li class="nav-item"><a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal">Login</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal">Sign
+                    up</a></li>
         </ul>
     </div>
 </nav>
@@ -120,18 +147,19 @@ if (isset($_POST['submit'])) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Login</h5>
+                <h5 class="modal-title" id="modalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="modalBody">
-                Test
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <input type="submit" name="submit" id="modal-submit" class="btn btn-primary" form="modalForm" value="Submit"/>
-            </div>
+            <form id="modalForm" method="post" action="">
+                <fieldset>
+                    <div class="modal-body" id="modalBody">
+                    </div>
+                    <div class="modal-footer" id="modalFooter">
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>
@@ -146,6 +174,7 @@ if (isset($_POST['submit'])) {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="js/ajax.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/date.js"></script>
 <script src="js/calendar.js"></script>

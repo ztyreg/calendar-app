@@ -1,26 +1,21 @@
 class Ajax {
 
-    constructor() {
+    constructor(data) {
 
-        this.data = {}
+        this.data = data;
 
-        this.ajax = function () {
-            const request = new XMLHttpRequest();
-            request.open("POST", "index.php");
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(this.objectToString(this.data));
-        }
-
-        this.objectToString = function (object) {
-            let str = "";
-            Object.keys(object).forEach(function (key) {
-                str += key;
-                str += `=${object[key]}&`;
+        this.post = async function () {
+            const response = await fetch('index.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(this.data)
             });
-            return str;
+
+            return await response.json();
         }
     }
-
 
 }
 

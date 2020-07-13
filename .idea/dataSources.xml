@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="calendar_app_build@192.168.64.2" uuid="4b9fdb6e-8a2e-4432-b459-23c2416bf83f">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://192.168.64.2:3306/calendar_app_build</jdbc-url>
+    </data-source>
+  </component>
+</project>
