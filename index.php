@@ -105,7 +105,7 @@ function respondJson($response)
                 <a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal" hidden>Sign up</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="logout-link" data-toggle="modal" data-target="#modal" hidden>Logout</a>
+                <a class="nav-link" id="logout-link" hidden>Logout</a>
             </li>
         </ul>
     </div>

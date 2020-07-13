@@ -24,23 +24,16 @@ calendar_body.addEventListener('mouseup', (e) => {
     openModal('addEvent', col, row);
 });
 
-calendar_body.addEventListener('mouseover', (e) => {
-    const cell = e.target;
-    cell.classList.add('bg-light');
-});
-
-calendar_body.addEventListener('mouseout', (e) => {
-    const cell = e.target;
-    cell.classList.remove('bg-light');
-});
-
 
 function loadEventListeners() {
+    // document listeners
     document.addEventListener("DOMContentLoaded", checkLogin, false);
     document.addEventListener("DOMContentLoaded", month.todayMonth, false);
+    // change month listeners
     month_today.addEventListener('click', month.todayMonth);
     month_next.addEventListener('click', month.nextMonth);
     month_prev.addEventListener('click', month.prevMonth);
+    // nav bar listeners
     login_link.addEventListener('click', () => {
         openModal('login');
     });
@@ -53,6 +46,16 @@ function loadEventListeners() {
                 showLoginActions();
             });
         e.preventDefault();
+    });
+    // calendar listeners
+    calendar_body.addEventListener('mouseover', (e) => {
+        const cell = e.target;
+        cell.classList.add('bg-light');
+    });
+
+    calendar_body.addEventListener('mouseout', (e) => {
+        const cell = e.target;
+        cell.classList.remove('bg-light');
     });
 }
 
