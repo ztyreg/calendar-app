@@ -11,6 +11,7 @@ const cur_year = document.getElementById('cur-year');
 
 const login_link = document.getElementById('login-link');
 const signup_link = document.getElementById('signup-link');
+const logout_link = document.getElementById('logout-link');
 
 let month = new Month();
 
@@ -35,6 +36,7 @@ calendar_body.addEventListener('mouseout', (e) => {
 
 
 function loadEventListeners() {
+    document.addEventListener("DOMContentLoaded", checkLogin, false);
     document.addEventListener("DOMContentLoaded", month.todayMonth, false);
     month_today.addEventListener('click', month.todayMonth);
     month_next.addEventListener('click', month.nextMonth);
@@ -45,5 +47,22 @@ function loadEventListeners() {
     signup_link.addEventListener('click', () => {
         openModal('signup');
     });
+    logout_link.addEventListener('click', (e) => {
+        Ajax.post({logout: true})
+            .then(r => {
+                showLoginActions();
+            });
+        e.preventDefault();
+    });
 }
 
+function checkLogin() {
+    Ajax.post({check_login: true})
+        .then(r => {
+            if (r.status === true) {
+                showLogoutActions();
+            } else {
+                showLoginActions();
+            }
+        });
+}

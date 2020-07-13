@@ -36,17 +36,26 @@ function login() {
     `;
     modal_footer.innerHTML = `
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-    <input type="submit" id="login-submit" class="btn btn-primary" data-dismiss="modal" value="Submit"/>
+    <input type="submit" id="login-submit" class="btn btn-primary" value="Submit"/>
     `;
 
     const submit_button = document.getElementById('login-submit');
+    const alert_banner = document.getElementById('alert');
     submit_button.addEventListener('click', (e) => {
         const login_username = document.getElementById('login-username').value;
         const login_password = document.getElementById('login-password').value;
-        const request = new Ajax({login_username, login_password});
-        request.post()
+        Ajax.post({login_username, login_password})
             .then(r => {
-                console.log(r);
+                if (r.status === false) {
+                    alert_banner.innerText = `Error: ${r.message}`;
+                    alert_banner.hidden = false;
+                    setTimeout(() => {
+                        alert_banner.hidden = true
+                    }, 3000);
+                } else {
+                    $('#modal').modal('hide');
+                    showLogoutActions();
+                }
             });
         e.preventDefault();
     });
@@ -75,12 +84,14 @@ function signup() {
     submit_button.addEventListener('click', (e) => {
         const signup_username = document.getElementById('signup-username').value;
         const signup_password = document.getElementById('signup-password').value;
-        const request = new Ajax({signup_username, signup_password});
-        request.post()
+        Ajax.post({signup_username, signup_password})
             .then(r => {
                 if (r.status === false) {
                     alert_banner.innerText = `Error: ${r.message}`;
                     alert_banner.hidden = false;
+                    setTimeout(() => {
+                        alert_banner.hidden = true
+                    }, 3000);
                 } else {
                     $('#modal').modal('hide');
                 }

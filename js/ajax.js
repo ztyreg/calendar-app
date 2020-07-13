@@ -1,22 +1,20 @@
 class Ajax {
 
-    constructor(data) {
+    constructor() {
+    }
 
-        this.data = data;
+    static async post(data) {
+        const response = await fetch('index.php', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-        this.post = async function () {
-            const response = await fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(this.data)
-            });
-
-            let resData;
-            resData = await response.json();
-            return resData;
-        }
+        let resData;
+        resData = await response.json();
+        return resData;
     }
 
 }

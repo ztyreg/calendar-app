@@ -47,7 +47,7 @@ class Session
      * Return login status
      * @return bool
      */
-    public function isSignedIn()
+    public function checkLogin()
     {
         return isset($_SESSION['user_id']);
     }

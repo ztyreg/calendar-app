@@ -1,42 +1,64 @@
 <?php
 require_once('src/header.php');
 
-function respondJson($data)
-{
-    ob_end_clean();
-    header('Content-Type: application/json');
-    echo json_encode($data);
-    exit();
-}
-
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (isset($data['login_username'])) {
-    $data = ['name' => 'God', 'age' => -1];
-    respondJson($data);
+// check login
+if (isset($data['check_login'])) {
+    $response = ['status' => $session->checkLogin()];
+    respondJson($response);
 }
 
+// logout
+if (isset($data['logout'])) {
+    error_log('logout');
+    $session->logout();
+    $response = ['status' => true];
+    respondJson($response);
+}
+
+// login
+if (isset($data['login_username'])) {
+    $username = $data['login_username'];
+    $password = $data['login_password'];
+    if ($user_id = User::verifyUser($username, $password)) {
+        $session->login($user_id);
+        $response = ['status' => true];
+    } else {
+        $response = ['status' => false, 'message' => 'Username or password is incorrect'];
+    }
+    respondJson($response);
+}
+
+// sign up
 if (isset($data['signup_username'])) {
     $username = trim($data['signup_username']);
     $password = trim($data['signup_password']);
-    $data = array();
+    $response = array();
     if (empty($username)) {
-        $data = ['status' => false, 'message' => 'Username cannot be empty'];
+        $response = ['status' => false, 'message' => 'Username cannot be empty'];
     } elseif (empty($password)) {
-        $data = ['status' => false, 'message' => 'Password cannot be empty'];
+        $response = ['status' => false, 'message' => 'Password cannot be empty'];
     } else {
         $status = User::createUser($username, $password);
         if ($status) {
-            $data = ['status' => true];
+            $response = ['status' => true];
         } else {
-            $data = ['status' => false, 'message' => 'User already exists'];
+            $response = ['status' => false, 'message' => 'User already exists'];
         }
     }
-    respondJson($data);
+    respondJson($response);
 
 }
 
+function respondJson($response)
+{
+    ob_end_clean();
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit();
+}
 
 ?>
 <!doctype html>
@@ -76,10 +98,15 @@ if (isset($data['signup_username'])) {
             </li>
         </ul>
         <ul class="navbar-nav navbar-right" id="user-actions">
-            <li class="nav-item"><a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal">Login</a>
+            <li class="nav-item">
+                <a class="nav-link" id="login-link" data-toggle="modal" data-target="#modal" hidden>Login</a>
             </li>
-            <li class="nav-item"><a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal">Sign
-                    up</a></li>
+            <li class="nav-item">
+                <a class="nav-link" id="signup-link" data-toggle="modal" data-target="#modal" hidden>Sign up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="logout-link" data-toggle="modal" data-target="#modal" hidden>Logout</a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -182,6 +209,7 @@ if (isset($data['signup_username'])) {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="js/nav.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/date.js"></script>
