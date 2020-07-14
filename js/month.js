@@ -5,15 +5,24 @@ class Month {
 
     constructor() {
         this.calendar_date = new Date();
+        /**
+         * Update month text
+         */
         this.changeMonth = () => {
-            calendar_body.innerHTML = getCalendar(this.calendar_date);
+            Calendar.getCalendar(this.calendar_date);
             cur_month.innerText = this.month;
-            cur_year.innerText = this.year;
+            cur_year.innerText = this.year.toString();
         };
+        /**
+         * Change month to today
+         */
         this.todayMonth = () => {
             this.calendar_date = new Date();
             this.changeMonth();
         };
+        /**
+         * Change to next month
+         */
         this.nextMonth = () => {
             let lastMonth = this.calendar_date.getMonth() === 11;
             let nextYear = lastMonth ? this.calendar_date.getFullYear() + 1 : this.calendar_date.getFullYear();
@@ -21,6 +30,9 @@ class Month {
             this.calendar_date = new Date(nextYear, nextMonth);
             this.changeMonth();
         }
+        /**
+         * Change to previous month
+         */
         this.prevMonth = () => {
             let firstMonth = this.calendar_date.getMonth() === 0;
             let prevYear = firstMonth ? this.calendar_date.getFullYear() - 1 : this.calendar_date.getFullYear();
@@ -36,6 +48,10 @@ class Month {
 
     get month() {
         return this.months[this.calendar_date.getMonth()];
+    }
+
+    get date_object() {
+        return this.calendar_date;
     }
 
 }

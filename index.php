@@ -4,6 +4,21 @@ require_once('src/header.php');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+// get events
+if (isset($data['event_date'])) {
+    $date = $data['event_date'];
+    $response = [];
+    $events = Event::selectEventByUserDate($session->getUserId(), $date);
+    error_log(count($events));
+    foreach ($events as $event) {
+        $event_arr = [];
+        $event_arr['title'] = $event->getTitle();
+        $event_arr['time'] = $event->getTime();
+        $response[] = $event_arr;
+    }
+    respondJson($response);
+}
+
 // check login
 if (isset($data['check_login'])) {
     $response = ['status' => $session->checkLogin()];
@@ -49,7 +64,6 @@ if (isset($data['signup_username'])) {
         }
     }
     respondJson($response);
-
 }
 
 function respondJson($response)
@@ -170,6 +184,60 @@ function respondJson($response)
                         </tr>
                         </thead>
                         <tbody id="calendar-body">
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
+                        <tr>
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border" style="width: 14.285%; height: 100%">
+                        </tr>
                         </tbody>
                     </table>
                 </div>

@@ -21,7 +21,14 @@ calendar_body.addEventListener('mouseup', (e) => {
     const cell = e.target;
     const col = cell.cellIndex;
     const row = cell.parentNode.rowIndex;
-    openModal('addEvent', col, row);
+    Ajax.post({check_login: true})
+        .then(r => {
+            if (r.status === true) {
+                openModal('addEvent', col, row);
+            } else {
+                openModal('pleaseLogin');
+            }
+        });
 });
 
 
@@ -43,7 +50,10 @@ function loadEventListeners() {
     logout_link.addEventListener('click', (e) => {
         Ajax.post({logout: true})
             .then(r => {
+                // update nav bar
                 showLoginActions();
+                // update calendar
+                Calendar.getCalendar(month.date_object);
             });
         e.preventDefault();
     });
