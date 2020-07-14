@@ -4,12 +4,27 @@ require_once('src/header.php');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-// get events
+// get events in a range of days
+if (isset($data['event_start_date'])) {
+    $start_date = $data['event_start_date'];
+    $end_date = $data['event_end_date'];
+    $response = [];
+    $events = Event::selectEventByUserDateRange($session->getUserId(), $start_date, $end_date);
+    foreach ($events as $event) {
+        $event_arr = [];
+        $event_arr['date'] = $event->getDate();
+        $event_arr['title'] = $event->getTitle();
+        $event_arr['time'] = $event->getTime();
+        $response[] = $event_arr;
+    }
+    respondJson($response);
+}
+
+// get events in one day
 if (isset($data['event_date'])) {
     $date = $data['event_date'];
     $response = [];
     $events = Event::selectEventByUserDate($session->getUserId(), $date);
-    error_log(count($events));
     foreach ($events as $event) {
         $event_arr = [];
         $event_arr['title'] = $event->getTitle();
@@ -99,7 +114,7 @@ function respondJson($response)
             <li class="nav-item active">
                 <a class="nav-link" href="#calendar">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#modal">About</a></li>
+            <li class="nav-item"><a class="nav-link" id="about-link" data-toggle="modal" data-target="#modal">About</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -185,58 +200,58 @@ function respondJson($response)
                         </thead>
                         <tbody id="calendar-body">
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         <tr>
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
-                            <td class="border" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
+                            <td class="border event-cell" style="width: 14.285%; height: 100%">
                         </tr>
                         </tbody>
                     </table>
@@ -280,7 +295,6 @@ function respondJson($response)
 <script src="js/nav.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/modal.js"></script>
-<script src="js/date.js"></script>
 <script src="js/calendar.js"></script>
 <script src="js/month.js"></script>
 <script src="js/app.js"></script>

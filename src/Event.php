@@ -41,6 +41,15 @@ class Event
         return self::executeSelect($stmt);
     }
 
+    public static function selectEventByUserDateRange($user_id, $start_date, $end_date)
+    {
+        global $database;
+        $stmt = $database->conn->prepare(
+            "SELECT id, user_id, title, date, time FROM events WHERE user_id=? AND date BETWEEN ? AND ? ORDER BY time");
+        $stmt->bind_param('sss', $user_id, $start_date, $end_date);
+        return self::executeSelect($stmt);
+    }
+
     private static function executeSelect($stmt)
     {
         $stmt->execute();
@@ -94,7 +103,7 @@ class Event
      */
     public function getTitle()
     {
-        return $this->title;
+        return htmlentities($this->title);
     }
 
     /**

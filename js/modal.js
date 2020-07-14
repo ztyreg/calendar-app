@@ -6,6 +6,9 @@ const modal_footer = document.getElementById('modalFooter');
 function openModal(type, ...args) {
     $("#modal").modal("toggle")
     switch (type) {
+        case 'about':
+            about();
+            break;
         case 'addEvent':
             addEvent(args);
             break;
@@ -24,6 +27,23 @@ function openModal(type, ...args) {
     }
 }
 
+function about() {
+    modal_title.innerText = 'About';
+    modal_body.innerHTML = `
+    This is a web calendar app.
+    <br>
+    To create an event on a specific date, click on the date cell.
+    <br>
+    To edit an event, click on the event name.
+    <br>
+    © Ethan Zheng 2020 All Rights Reserved
+    `;
+    modal_footer.innerHTML = `
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Dismiss</button>
+    `;
+}
+
 function pleaseLogin() {
     modal_title.innerText = 'Please login';
     modal_body.innerHTML = `
@@ -31,7 +51,7 @@ function pleaseLogin() {
     `;
     modal_footer.innerHTML = `
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-    <button type="button" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Dismiss</button>
     `;
 }
 
@@ -62,16 +82,18 @@ function login() {
         Ajax.post({login_username, login_password})
             .then(r => {
                 if (r.status === false) {
+                    // login error
                     alert_banner.innerText = `Error: ${r.message}`;
                     alert_banner.hidden = false;
                     setTimeout(() => {
                         alert_banner.hidden = true
                     }, 3000);
                 } else {
+                    // login successful
                     // hide modal
                     $('#modal').modal('hide');
                     // update nav bar
-                    showLogoutActions();
+                    Navigation.showLogoutActions();
                     // update calendar
                     Calendar.getCalendar(month.date_object);
                 }
@@ -107,12 +129,14 @@ function signup() {
         Ajax.post({signup_username, signup_password})
             .then(r => {
                 if (r.status === false) {
+                    // sign-up error
                     alert_banner.innerText = `Error: ${r.message}`;
                     alert_banner.hidden = false;
                     setTimeout(() => {
                         alert_banner.hidden = true
                     }, 3000);
                 } else {
+                    // successful
                     $('#modal').modal('hide');
                 }
             });
@@ -132,17 +156,21 @@ function addEvent(args) {
     modal_body.innerHTML = `<form>
   <fieldset>
     <div class="form-group">
-      <label for="exampleInputEmail1">Title</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+      <label for="eventTitle">Title</label>
+      <input type="text" class="form-control" id="eventTitle" placeholder="Enter title">
     </div>
     <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      <label for="eventDate">Date</label>
+      <input type="date" class="form-control" id="eventDate" placeholder="">
+    </div>
+    <div class="form-group">
+      <label for="eventTime">Time</label>
+      <input type="time" class="form-control" id="eventTime" placeholder="">
     </div>
 
     <div class="form-group">
-      <label for="exampleTextarea">Example textarea</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+      <label for="eventDescription">Description</label>
+      <textarea class="form-control" id="eventDescription" rows="3"></textarea>
     </div>
 </form>`;
 }

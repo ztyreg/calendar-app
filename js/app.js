@@ -1,5 +1,3 @@
-const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
-
 const calendar_body = document.getElementById("calendar-body");
 
 const month_today = document.getElementById('today-month');
@@ -9,6 +7,7 @@ const month_prev = document.getElementById('prev-month');
 const cur_month = document.getElementById('cur-month');
 const cur_year = document.getElementById('cur-year');
 
+const about_link = document.getElementById('about-link');
 const login_link = document.getElementById('login-link');
 const signup_link = document.getElementById('signup-link');
 const logout_link = document.getElementById('logout-link');
@@ -38,6 +37,10 @@ function loadMonthListeners() {
  * Navigation bar listeners
  */
 function loadNavigationListeners() {
+    // about
+    about_link.addEventListener('click', () => {
+        openModal('about');
+    });
     // login
     login_link.addEventListener('click', () => {
         openModal('login');
@@ -51,7 +54,7 @@ function loadNavigationListeners() {
         Ajax.post({logout: true})
             .then(r => {
                 // update nav bar
-                showLoginActions();
+                Navigation.showLoginActions();
                 // update calendar
                 Calendar.getCalendar(month.date_object);
             });
@@ -75,9 +78,10 @@ function loadCalendarListeners() {
     });
     // click active cell
     calendar_body.addEventListener('mouseup', (e) => {
-        const cell = e.target;
-        const col = cell.cellIndex;
-        const row = cell.parentNode.rowIndex;
+        const target = e.target;
+        console.log(target.classList.contains('event-banner'));
+        const col = target.cellIndex;
+        const row = target.parentNode.rowIndex;
         Ajax.post({check_login: true})
             .then(r => {
                 if (r.status === true) {
@@ -99,9 +103,9 @@ function loadDocumentListeners() {
         Ajax.post({check_login: true})
             .then(r => {
                 if (r.status === true) {
-                    showLogoutActions();
+                    Navigation.showLogoutActions();
                 } else {
-                    showLoginActions();
+                    Navigation.showLoginActions();
                 }
             });
     }, false);
