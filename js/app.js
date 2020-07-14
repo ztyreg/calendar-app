@@ -13,40 +13,40 @@ const login_link = document.getElementById('login-link');
 const signup_link = document.getElementById('signup-link');
 const logout_link = document.getElementById('logout-link');
 
-let month = new Month();
+// object to keep track of current month
+const month = new Month();
 
-loadEventListeners();
+loadDocumentListeners();
+loadMonthListeners();
+loadNavigationListeners();
+loadCalendarListeners();
 
-calendar_body.addEventListener('mouseup', (e) => {
-    const cell = e.target;
-    const col = cell.cellIndex;
-    const row = cell.parentNode.rowIndex;
-    Ajax.post({check_login: true})
-        .then(r => {
-            if (r.status === true) {
-                openModal('addEvent', col, row);
-            } else {
-                openModal('pleaseLogin');
-            }
-        });
-});
-
-
-function loadEventListeners() {
-    // document listeners
-    document.addEventListener("DOMContentLoaded", checkLogin, false);
-    document.addEventListener("DOMContentLoaded", month.todayMonth, false);
-    // change month listeners
+/**
+ * Change month listeners
+ */
+function loadMonthListeners() {
+    // today button
     month_today.addEventListener('click', month.todayMonth);
+    // next button
     month_next.addEventListener('click', month.nextMonth);
+    // previous button
     month_prev.addEventListener('click', month.prevMonth);
-    // nav bar listeners
+}
+
+
+/**
+ * Navigation bar listeners
+ */
+function loadNavigationListeners() {
+    // login
     login_link.addEventListener('click', () => {
         openModal('login');
     });
+    // sign up
     signup_link.addEventListener('click', () => {
         openModal('signup');
     });
+    // logout
     logout_link.addEventListener('click', (e) => {
         Ajax.post({logout: true})
             .then(r => {
@@ -57,25 +57,55 @@ function loadEventListeners() {
             });
         e.preventDefault();
     });
-    // calendar listeners
+}
+
+
+/**
+ * Calendar listeners
+ */
+function loadCalendarListeners() {
+    // show active cell
     calendar_body.addEventListener('mouseover', (e) => {
         const cell = e.target;
-        cell.classList.add('bg-light');
+        cell.classList.add('bg-secondary');
     });
-
     calendar_body.addEventListener('mouseout', (e) => {
         const cell = e.target;
-        cell.classList.remove('bg-light');
+        cell.classList.remove('bg-secondary');
+    });
+    // click active cell
+    calendar_body.addEventListener('mouseup', (e) => {
+        const cell = e.target;
+        const col = cell.cellIndex;
+        const row = cell.parentNode.rowIndex;
+        Ajax.post({check_login: true})
+            .then(r => {
+                if (r.status === true) {
+                    openModal('addEvent', col, row);
+                } else {
+                    openModal('pleaseLogin');
+                }
+            });
     });
 }
 
-function checkLogin() {
-    Ajax.post({check_login: true})
-        .then(r => {
-            if (r.status === true) {
-                showLogoutActions();
-            } else {
-                showLoginActions();
-            }
-        });
+
+/**
+ * Document listeners
+ */
+function loadDocumentListeners() {
+    // check login
+    document.addEventListener("DOMContentLoaded", () => {
+        Ajax.post({check_login: true})
+            .then(r => {
+                if (r.status === true) {
+                    showLogoutActions();
+                } else {
+                    showLoginActions();
+                }
+            });
+    }, false);
+    // set month text
+    document.addEventListener("DOMContentLoaded", month.todayMonth, false);
+
 }

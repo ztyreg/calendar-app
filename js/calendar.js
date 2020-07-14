@@ -18,7 +18,7 @@ class Calendar {
                         let daily = cur_date.getDate().toString();
                         events.forEach((value) => {
                             console.log(value);
-                            daily += `<br>${value.title}`;
+                            daily += `<br><div>${value.title}</div>`;
                         });
                         calendar.rows[1].cells[0].innerHTML = daily;
                     });
