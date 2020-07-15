@@ -8,6 +8,8 @@
 
 ### Website
 
+http://3.22.235.98/cse330/module5/calendar/index.php
+
 ### Tester Accounts
 * Username 222 (password: 222)
 * Username 333 (password: 333)
