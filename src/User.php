@@ -23,9 +23,14 @@ class User
      * @param $id
      * @return string username
      */
-    public static function findUsernameFromId($id)
+    public static function findUsernameById($id)
     {
         return User::selectUserById($id)[0]->getUsername();
+    }
+
+    public static function findIdByUsername($username)
+    {
+        return User::selectUserByUsername($username)[0]->getId();
     }
 
     /**

@@ -9,13 +9,13 @@ class Calendar {
     /**
      * Get calendar HTML
      * @param date
+     * @param calendar
      */
-    static getCalendar(date) {
+    static getCalendar(date, calendar) {
         // check login status
         Ajax.post({check_login: true})
             .then(r => {
                 // get calendar element
-                let calendar = document.getElementById('calendar');
                 // the first cell is first monday
                 let cur_date = Calendar.firstMonday(date);
                 if (r.status === true) {
@@ -27,28 +27,7 @@ class Calendar {
                     })
                         // get events in the date range
                         .then(events => {
-                            for (let i = 1; i < 7; i++) {
-                                // skip table title
-                                for (let j = 0; j < 7; j++) {
-                                    // print date
-                                    let daily = cur_date.getDate().toString();
-                                    // add events
-                                    // 1. first filter events of the day
-                                    let events_of_day = events.filter(event => {
-                                        if (event.hasOwnProperty('date')) {
-                                            return event.date === Calendar.formatDate(cur_date);
-                                        }
-                                    });
-                                    // 2. then append to cell
-                                    events_of_day.forEach((event, index) => {
-                                        daily += `<div class="event-banner bg-light" id="evt${index}">&bull; ${event.title}</div>`;
-                                    });
-                                    // show cell content
-                                    calendar.rows[i].cells[j].innerHTML = daily;
-                                    // next date
-                                    cur_date = Calendar.addDay(cur_date, 1);
-                                }
-                            }
+                            Calendar.buildCalendar(events, calendar, cur_date);
                         });
                 } else {
                     // if not logged in, only show dates
@@ -63,7 +42,47 @@ class Calendar {
                     }
                 }
             });
+    }
 
+    static viewCalendar(date, calendar, username) {
+        // the first cell is first monday
+        let cur_date = Calendar.firstMonday(date);
+        // post current start and end date
+        Ajax.post({
+            view_calendar: true,
+            username,
+            event_start_date: Calendar.formatDate(Calendar.firstMonday(date)),
+            event_end_date: Calendar.formatDate(Calendar.addDay(date, Calendar.NUM_CALENDAR_DATES - 1))
+        })
+            // get events in the date range
+            .then(events => {
+                Calendar.buildCalendar(events, calendar, cur_date);
+            });
+    }
+
+    static buildCalendar(events, calendar, cur_date) {
+        for (let i = 1; i < 7; i++) {
+            // skip table title
+            for (let j = 0; j < 7; j++) {
+                // print date
+                let daily = cur_date.getDate().toString();
+                // add events
+                // 1. first filter events of the day
+                let events_of_day = events.filter(event => {
+                    if (event.hasOwnProperty('date')) {
+                        return event.date === Calendar.formatDate(cur_date);
+                    }
+                });
+                // 2. then append to cell
+                events_of_day.forEach((event, index) => {
+                    daily += `<div class="event-banner bg-light" id="evt${index}">&bull; ${event.title}</div>`;
+                });
+                // show cell content
+                calendar.rows[i].cells[j].innerHTML = daily;
+                // next date
+                cur_date = Calendar.addDay(cur_date, 1);
+            }
+        }
     }
 
     /**
@@ -72,7 +91,7 @@ class Calendar {
      * @returns {string}
      */
     static formatDate(date) {
-        return date.toISOString().slice(0,10);
+        return date.toISOString().slice(0, 10);
     }
 
     /**

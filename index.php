@@ -5,6 +5,39 @@ require_once('src/header.php');
 // Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
 
+// get events in a range of days
+if (isset($data['view_calendar'])) {
+    $username = $data['username'];
+    $start_date = $data['event_start_date'];
+    $end_date = $data['event_end_date'];
+    $response = [];
+    $user_id = User::findIdByUsername($username);
+    $events = Event::selectEventByUserDateRange($user_id, $start_date, $end_date);
+    foreach ($events as $event) {
+        $event_arr = [];
+        $event_arr['date'] = $event->getDate();
+        $event_arr['title'] = $event->getTitle();
+        $event_arr['time'] = $event->getTime();
+        $response[] = $event_arr;
+    }
+    respondJson($response);
+}
+
+if (isset($data['select_shared_calendars'])) {
+    $response = [];
+    $shared_calendars = SharedCalendar::selectSharedCalendarBySharedUserId($session->getUserId());
+    $shared_arr = array();
+    foreach ($shared_calendars as $shared_calendar) {
+        $shared_arr[] = User::findUsernameById($shared_calendar->getOwnerUserId());
+    }
+    if (empty($shared_arr)) {
+        $response = ['status' => false];
+    } else {
+        $response = ['status' => true, 'shared_calendars' => $shared_arr];
+    }
+    respondJson($response);
+}
+
 // share calendar
 if (isset($data['share_username'])) {
     $response = [];
@@ -203,8 +236,6 @@ function respondJson($response)
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <title>Calendar</title>
@@ -256,19 +287,19 @@ function respondJson($response)
             <div class="row mt-3">
                 <div class="col">
                     <h1 class="year-heading">
-                        <span id="cur-year"></span>
+                        <span id="cur-year">Year</span>
                     </h1>
                     <h1 class="month-heading">
-                        <span id="cur-month"></span>
+                        <span id="cur-month">Month</span>
                     </h1>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
                     <h3 class="choose-month">
-                        <button id="prev-month" class="btn btn-secondary"><</button>
+                        <button id="prev-month" class="btn btn-secondary">&lt;</button>
                         <button id="today-month" class="btn btn-secondary">Today</button>
-                        <button id="next-month" class="btn btn-secondary">></button>
+                        <button id="next-month" class="btn btn-secondary">&gt;</button>
                     </h3>
                 </div>
             </div>
@@ -280,6 +311,7 @@ function respondJson($response)
             <div class="row mt-3">
                 <div class="col">
                     <h5>Shared with me</h5>
+                    <div id="shared-withme"></div>
                 </div>
             </div>
         </div>
@@ -367,15 +399,15 @@ function respondJson($response)
 </div>
 
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" id="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel"></h5>
+                <h5 class="modal-title" id="modalLabel">Title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="modalForm" method="post" action="">
+            <form id="modalForm" method="post">
                 <fieldset>
                     <div class="modal-body" id="modalBody">
                     </div>

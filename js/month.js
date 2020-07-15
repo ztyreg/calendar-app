@@ -10,7 +10,7 @@ class Month {
          * Update month text
          */
         this.changeMonth = () => {
-            Calendar.getCalendar(this.cur_month);
+            Calendar.getCalendar(this.cur_month, calendar);
             cur_month.innerText = this.month;
             cur_year.innerText = this.year.toString();
         };

@@ -29,7 +29,7 @@ class SharedCalendar
     {
         $stmt->execute();
         $owner_user_id = $shared_user_id = "";
-        $stmt->bind_result($owner_user_id);
+        $stmt->bind_result($owner_user_id, $shared_user_id);
         $result_array = array();
         while ($stmt->fetch()) {
             $result_array[] = new SharedCalendar($owner_user_id, $shared_user_id);
@@ -47,6 +47,22 @@ class SharedCalendar
         $res = $stmt->execute();
         $stmt->close();
         return $res;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerUserId()
+    {
+        return $this->owner_user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSharedUserId()
+    {
+        return $this->shared_user_id;
     }
 
 }

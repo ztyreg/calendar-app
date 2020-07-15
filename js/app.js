@@ -1,4 +1,7 @@
 const calendar_body = document.getElementById("calendar-body");
+const calendar = document.getElementById('calendar');
+
+const shared_withme = document.getElementById('shared-withme');
 
 const month_today = document.getElementById('today-month');
 const month_next = document.getElementById('next-month');
@@ -22,6 +25,35 @@ loadDocumentListeners();
 loadMonthListeners();
 loadNavigationListeners();
 loadCalendarListeners();
+showSharedCalendars();
+
+function showSharedCalendars() {
+    // calendars shared with me
+    Ajax.post({select_shared_calendars: true})
+        .then(r => {
+            if (r.status === false) {
+                // no calendars
+                shared_withme.innerText = 'No shared calendars';
+            } else {
+                const shared_list = document.createElement('ul');
+                shared_list.style.margin = '0';
+                shared_list.style.padding = '0';
+                shared_list.style.listStyleType = 'none';
+                r.shared_calendars.forEach(username => {
+                    const item = document.createElement('li');
+                    item.innerHTML = username;
+                    item.style.cursor = "pointer";
+                    item.addEventListener('click', () => {
+                        openModal('view', username);
+                    });
+                    shared_list.appendChild(item);
+                });
+                shared_withme.innerText = '';
+                shared_withme.appendChild(shared_list);
+            }
+        });
+}
+
 
 /**
  * Change month listeners
@@ -63,7 +95,7 @@ function loadNavigationListeners() {
                 // update nav bar
                 Navigation.showLoginActions();
                 // update calendar
-                Calendar.getCalendar(month.date_object);
+                Calendar.getCalendar(month.date_object, calendar);
             });
         e.preventDefault();
     });

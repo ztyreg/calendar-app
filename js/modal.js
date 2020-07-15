@@ -1,16 +1,25 @@
 const modal = document.getElementById('modal');
+const modal_dialog = document.getElementById('modal-dialog');
 const modal_title = document.getElementById('modalLabel');
 const modal_body = document.getElementById('modalBody');
 const modal_footer = document.getElementById('modalFooter');
 
 function openModal(type, ...args) {
     $("#modal").modal("toggle")
+    if (type === 'view') {
+        modal_dialog.classList.add('modal-lg');
+    } else {
+        modal_dialog.classList.remove('modal-lg');
+    }
     switch (type) {
         case 'about':
             about();
             break;
         case 'share':
             share();
+            break;
+        case 'view':
+            view(args[0]);
             break;
         case 'addEvent':
             addEvent(args[0], args[1]);
@@ -31,6 +40,87 @@ function openModal(type, ...args) {
             emptyModal();
             break;
     }
+}
+
+function view(username) {
+    modal_title.innerText = 'Calendar of ' + username;
+    modal_body.innerHTML = `
+<table class="table border mt-3" id="view-calendar">
+<thead id="calendar-head">
+<tr>
+<th class="border weekday">MON</th>
+<th class="border weekday">TUE</th>
+<th class="border weekday">WED</th>
+<th class="border weekday">THU</th>
+<th class="border weekday">FRI</th>
+<th class="border weekday">SAT</th>
+<th class="border weekday">SUN</th>
+</tr>
+</thead>
+<tbody id="calendar-body">
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+<tr>
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+<td class="border event-cell" style="width: 14.285%; height: 100%">
+</tr>
+</tbody>
+</table>
+    `;
+    modal_footer.innerHTML = `
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Dismiss</button>
+    `;
+    const view_calendar = document.getElementById('view-calendar');
+    Calendar.viewCalendar(month.date_object, view_calendar, username);
 }
 
 function share() {
@@ -65,7 +155,7 @@ function share() {
                     // hide modal
                     $('#modal').modal('hide');
                     // update calendar
-                    Calendar.getCalendar(month.date_object);
+                    Calendar.getCalendar(month.date_object, calendar);
                 }
             });
     });
@@ -79,7 +169,9 @@ This is a web calendar app.
 <li>To create an account, click on <strong>sign up</strong></li>
 <li> To create an event, click on the cell
 <li> To edit an event, click on the event title
-<li> To share you calendar, click on actions -> share</li>
+<li> To share your calendar, click on actions -> share</li>
+<li> To view calendars shared with you, click the names below <strong>shared with me</strong></li>
+<li> To view the shared calendars in a specific month, first change to that month and then view the calendar</li>
 </ul>
 Tester accounts: 
 <ol>
@@ -146,7 +238,7 @@ function login() {
                     // update nav bar
                     Navigation.showLogoutActions();
                     // update calendar
-                    Calendar.getCalendar(month.date_object);
+                    Calendar.getCalendar(month.date_object, calendar);
                 }
             });
     });
@@ -269,7 +361,7 @@ function addEvent(row, col) {
                     // successful
                     $('#modal').modal('hide');
                     // update calendar
-                    Calendar.getCalendar(month.date_object);
+                    Calendar.getCalendar(month.date_object, calendar);
                 }
             });
     });
@@ -362,7 +454,7 @@ function editEvent(row, col, nth) {
                     // successful
                     $('#modal').modal('hide');
                     // update calendar
-                    Calendar.getCalendar(month.date_object);
+                    Calendar.getCalendar(month.date_object, calendar);
                 }
             });
     });
@@ -382,7 +474,7 @@ function editEvent(row, col, nth) {
                     // successful
                     $('#modal').modal('hide');
                     // update calendar
-                    Calendar.getCalendar(month.date_object);
+                    Calendar.getCalendar(month.date_object, calendar);
                 }
             });
 
