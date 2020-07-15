@@ -5,6 +5,10 @@ require_once('src/header.php');
 // Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
 
+if (isset($data['get_token'])) {
+    $response = ['token' => $session->getToken()];
+    respondJson($response);
+}
 
 // get events in a range of days
 if (isset($data['view_calendar'])) {
@@ -197,7 +201,7 @@ if (isset($data['login_username'])) {
     $password = $data['login_password'];
     if ($user_id = User::verifyUser($username, $password)) {
         $session->login($user_id);
-        $response = ['status' => true];
+        $response = ['status' => true, 'token' => $session->getToken()];
     } else {
         $response = ['status' => false, 'message' => 'Username or password is incorrect'];
     }
@@ -420,9 +424,6 @@ function respondJson($response)
     </div>
 </div>
 
-<script type="text/javascript">
-    const token = "<?php echo $session->getToken(); ?>";
-</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

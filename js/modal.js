@@ -235,6 +235,8 @@ function login() {
                     // login successful
                     // hide modal
                     $('#modal').modal('hide');
+                    // CSRF token
+                    token = r.token;
                     // update nav bar
                     Navigation.showLogoutActions();
                     // update calendar

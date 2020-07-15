@@ -18,6 +18,8 @@ const share_link = document.getElementById('share-calendar');
 
 const new_event = document.getElementById('new-event');
 
+let token;
+
 // object to keep track of current month
 const month = new Month();
 

@@ -70,7 +70,10 @@ class Session
      */
     public function getToken()
     {
-        return $_SESSION['token'];
+        if (isset($_SESSION['token'])) {
+            return $_SESSION['token'];
+        }
+        return null;
     }
 
     /**
