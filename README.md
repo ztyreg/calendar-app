@@ -26,5 +26,3 @@ So the user can also edit the last few days of the previous month and the first 
     * Error banner disappear in 3 seconds
     * Use modal to show actions and fade background
 
-
-CSRF tokens are passed when adding/editing/deleting events (3 points)

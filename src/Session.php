@@ -66,9 +66,9 @@ class Session
 
     /**
      * Get session CSRF token
-     * @return string
+     * @return mixed
      */
-    public function getToken(): string
+    public function getToken()
     {
         return $_SESSION['token'];
     }
