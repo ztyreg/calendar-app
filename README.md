@@ -24,7 +24,7 @@ So the user can also edit the last few days of the previous month and the first 
 * Users can add description to events and see the description if they click on an event
 * Users can share calendar with other users
 * UI and UX
-    * User Bootstrap to build calendar, so the website also looks nice on mobile devices
+    * User Bootstrap to build calendar
     * Error banner disappear in 3 seconds
     * Use modal to show actions and fade background
 
