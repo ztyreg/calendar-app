@@ -10,7 +10,10 @@ function openModal(type, ...args) {
             about();
             break;
         case 'addEvent':
-            addEvent(args);
+            addEvent(args[0], args[1]);
+            break;
+        case 'editEvent':
+            editEvent(args[0], args[1], args[2]);
             break;
         case 'login':
             login();
@@ -155,7 +158,7 @@ function emptyModal() {
     modal_footer.innerHTML = '';
 }
 
-function addEvent(args) {
+function addEvent(row, col) {
     modal_title.innerText = 'New Event';
     modal_body.innerHTML = `<form>
   <fieldset>
@@ -185,11 +188,11 @@ function addEvent(args) {
     const alert_banner = document.getElementById('alert');
     // auto fill date
     let date_clicked;
-    date_clicked = Calendar.addDayArr(Calendar.firstMonday(month.date_object), args);
+    date_clicked = Calendar.addDayArr(Calendar.firstMonday(month.date_object), row, col);
     document.getElementById('event-date').valueAsDate = date_clicked;
-    // get form values
     submit_button.addEventListener('click', (e) => {
         e.preventDefault();
+        // get form values
         const event_title = document.getElementById('event-title').value;
         const event_date = document.getElementById('event-date').value;
         const event_time = document.getElementById('event-time').value;
@@ -227,5 +230,119 @@ function addEvent(args) {
                     Calendar.getCalendar(month.date_object);
                 }
             });
+    });
+}
+
+function editEvent(row, col, nth) {
+    modal_title.innerText = 'Edit Event';
+    modal_body.innerHTML = `<form>
+  <fieldset>
+    <div class="form-group">
+      <label for="event-title">Title</label>
+      <input type="text" class="form-control" id="event-title" placeholder="Enter title">
+    </div>
+    <div class="form-group">
+      <label for="event-date">Date</label>
+      <input type="date" class="form-control" id="event-date" placeholder="">
+    </div>
+    <div class="form-group">
+      <label for="event-time">Time</label>
+      <input type="time" class="form-control" id="event-time" placeholder="">
+    </div>
+    <div class="form-group">
+      <label for="event-description">Description (optional)</label>
+      <textarea class="form-control" id="event-description" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+    <div class="alert alert-primary" role="alert" id="alert" hidden></div>
+</form>`;
+    modal_footer.innerHTML = `
+    <button class="btn btn-outline-danger mr-auto" id="editevent-delete">Delete</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <input type="submit" id="editevent-submit" class="btn btn-primary" value="Submit"/>
+    `;
+    const submit_button = document.getElementById('editevent-submit');
+    const delete_button = document.getElementById('editevent-delete');
+    const alert_banner = document.getElementById('alert');
+    // auto fill date
+    let date_clicked;
+    date_clicked = Calendar.addDayArr(Calendar.firstMonday(month.date_object), row, col);
+    const event_title_input = document.getElementById('event-title');
+    const event_date_input = document.getElementById('event-date');
+    const event_time_input = document.getElementById('event-time');
+    const event_description_input = document.getElementById('event-description');
+    event_date_input.valueAsDate = date_clicked;
+    const event_date = document.getElementById('event-date').value;
+    // get event details
+    Ajax.post({select_event_date_nth: true, event_date, nth})
+        .then(r => {
+            event_title_input.value = Html.htmlDecode(r.title);
+            event_time_input.value = r.time;
+            event_description_input.value = Html.htmlDecode(r.description);
+        });
+    submit_button.addEventListener('click', (e) => {
+        e.preventDefault();
+        // get form values
+        const event_title = document.getElementById('event-title').value;
+        const new_event_date = document.getElementById('event-date').value;
+        const event_time = document.getElementById('event-time').value;
+        const event_description = document.getElementById('event-description').value;
+        // form validation
+        if (!event_title || !new_event_date || !event_time) {
+            // field empty
+            if (!event_title) {
+                alert_banner.innerText = `Error: Title cannot be empty`;
+            } else if (!new_event_date) {
+                alert_banner.innerText = `Error: Date cannot be empty`;
+            } else if (!event_time) {
+                alert_banner.innerText = `Error: Time cannot be empty`;
+            }
+            alert_banner.hidden = false;
+            setTimeout(() => {
+                alert_banner.hidden = true
+            }, 3000);
+            return;
+        }
+        // post new event request
+        Ajax.post({
+            update_event: true,
+            nth, new_event_date, event_title, event_date, event_time, event_description
+        })
+            .then(r => {
+                if (r.status === false) {
+                    // error
+                    alert_banner.innerText = `Error: ${r.message}`;
+                    alert_banner.hidden = false;
+                    setTimeout(() => {
+                        alert_banner.hidden = true
+                    }, 3000);
+                } else {
+                    // successful
+                    $('#modal').modal('hide');
+                    // update calendar
+                    Calendar.getCalendar(month.date_object);
+                }
+            });
+    });
+    delete_button.addEventListener('click', (e) => {
+        e.preventDefault();
+        // post new event request
+        Ajax.post({delete_event: true, nth, event_date})
+            .then(r => {
+                if (r.status === false) {
+                    // error
+                    alert_banner.innerText = `Error: ${r.message}`;
+                    alert_banner.hidden = false;
+                    setTimeout(() => {
+                        alert_banner.hidden = true
+                    }, 3000);
+                } else {
+                    // successful
+                    $('#modal').modal('hide');
+                    // update calendar
+                    Calendar.getCalendar(month.date_object);
+                }
+            });
+
     });
 }

@@ -5,6 +5,64 @@ require_once('src/header.php');
 // Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
 
+// delete event
+if (isset($data['delete_event'])) {
+    $nth = $data['nth'];
+    $event_date = $data['event_date'];
+    $event = Event::selectEventByUserDateNth($session->getUserId(), $event_date, $nth)[0];
+    $event_id = $event->getId();
+    $status = Event::deleteEvent($event_id);
+    if ($status) {
+        $response = ['status' => true];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to delete event'];
+    }
+    respondJson($response);
+}
+
+// update event
+if (isset($data['update_event'])) {
+    $nth = $data['nth'];
+    $new_event_date = $data['new_event_date'];
+    $event_title = $data['event_title'];
+    $event_date = $data['event_date'];
+    $event_time = $data['event_time'];
+    $event_description = $data['event_description'];
+    $event = Event::selectEventByUserDateNth($session->getUserId(), $event_date, $nth)[0];
+    $event_id = $event->getId();
+    $response = [];
+    if (empty($event_title)) {
+        $response = ['status' => false, 'message' => 'Title cannot be empty!'];
+    } elseif (empty($event_date)) {
+        $response = ['status' => false, 'message' => 'Date cannot be empty!'];
+    } elseif (empty($event_time)) {
+        $response = ['status' => false, 'message' => 'Time cannot be empty!'];
+    } else {
+        $status = Event::updateEvent(
+            $event_id, $event_title, $new_event_date, $event_time, $event_description);
+        if ($status) {
+            $response = ['status' => true];
+        } else {
+            $response = ['status' => false, 'message' => 'Failed to update event'];
+        }
+    }
+    respondJson($response);
+}
+
+// edit event
+if (isset($data['select_event_date_nth'])) {
+    $event_date = $data['event_date'];
+    $nth = $data['nth'];
+    $response = [];
+    $events = Event::selectEventByUserDateNth($session->getUserId(), $event_date, $nth);
+    $event = $events[0];
+    $response['date'] = $event->getDate();
+    $response['title'] = $event->getTitle();
+    $response['time'] = $event->getTimeMinutes();
+    $response['description'] = $event->getDescription();
+    respondJson($response);
+}
+
 // new event
 if (isset($data['new_event'])) {
     $event_title = $data['event_title'];
@@ -20,7 +78,7 @@ if (isset($data['new_event'])) {
         $response = ['status' => false, 'message' => 'Time cannot be empty!'];
     } else {
         $status = Event::createEvent(
-                $session->getUserId(), $event_title, $event_date, $event_time, $event_description);
+            $session->getUserId(), $event_title, $event_date, $event_time, $event_description);
         if ($status) {
             $response = ['status' => true];
         } else {
@@ -68,7 +126,6 @@ if (isset($data['check_login'])) {
 
 // logout
 if (isset($data['logout'])) {
-    error_log('logout');
     $session->logout();
     $response = ['status' => true];
     respondJson($response);
@@ -319,6 +376,7 @@ function respondJson($response)
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="js/html.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/modal.js"></script>

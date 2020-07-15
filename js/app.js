@@ -84,18 +84,34 @@ function loadCalendarListeners() {
     });
     // click active cell
     calendar_body.addEventListener('mouseup', (e) => {
-        const target = e.target;
-        console.log(target.classList.contains('event-banner'));
-        const col = target.cellIndex;
-        const row = target.parentNode.rowIndex;
-        Ajax.post({check_login: true})
-            .then(r => {
-                if (r.status === true) {
-                    openModal('addEvent', row, col);
-                } else {
-                    openModal('pleaseLogin');
-                }
-            });
+        const click_target = e.target;
+        if (click_target.classList.contains('event-banner')) {
+            // event clicked, edit event
+            const cell = click_target.parentNode;
+            const col = cell.cellIndex;
+            const row = cell.parentNode.rowIndex;
+            const id = parseInt(click_target.id[3]);
+            Ajax.post({check_login: true})
+                .then(r => {
+                    if (r.status === true) {
+                        openModal('editEvent', row, col, id);
+                    } else {
+                        openModal('pleaseLogin');
+                    }
+                });
+        } else {
+            // date clicked, create new event
+            const col = click_target.cellIndex;
+            const row = click_target.parentNode.rowIndex;
+            Ajax.post({check_login: true})
+                .then(r => {
+                    if (r.status === true) {
+                        openModal('addEvent', row, col);
+                    } else {
+                        openModal('pleaseLogin');
+                    }
+                });
+        }
     });
 }
 
