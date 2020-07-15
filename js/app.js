@@ -11,6 +11,9 @@ const about_link = document.getElementById('about-link');
 const login_link = document.getElementById('login-link');
 const signup_link = document.getElementById('signup-link');
 const logout_link = document.getElementById('logout-link');
+const share_link = document.getElementById('share-calendar');
+
+const new_event = document.getElementById('new-event');
 
 // object to keep track of current month
 const month = new Month();
@@ -48,6 +51,10 @@ function loadNavigationListeners() {
     // sign up
     signup_link.addEventListener('click', () => {
         openModal('signup');
+    });
+    // share calendar
+    share_link.addEventListener('click', () => {
+        openModal('share');
     });
     // logout
     logout_link.addEventListener('click', (e) => {
@@ -112,6 +119,9 @@ function loadCalendarListeners() {
                     }
                 });
         }
+    });
+    new_event.addEventListener('click', (e) => {
+        openModal('addEvent', 1, 0);
     });
 }
 

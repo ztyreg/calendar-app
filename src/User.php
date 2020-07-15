@@ -41,6 +41,14 @@ class User
         return self::executeSelect($stmt);
     }
 
+    public static function selectUserByUsername($username)
+    {
+        global $database;
+        $stmt = $database->conn->prepare("SELECT id, username, password FROM users WHERE username=?");
+        $stmt->bind_param('s', $username);
+        return self::executeSelect($stmt);
+    }
+
     private static function executeSelect($stmt)
     {
         $stmt->execute();
@@ -98,7 +106,9 @@ class User
         // prepare statement
         $stmt = $database->conn->prepare("INSERT INTO users (username, password) values (?, ?)");
         $stmt->bind_param('ss', $username, $password);
-        return $stmt->execute();
+        $res = $stmt->execute();
+        $stmt->close();
+        return $res;
     }
 
     /**

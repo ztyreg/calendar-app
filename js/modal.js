@@ -9,6 +9,9 @@ function openModal(type, ...args) {
         case 'about':
             about();
             break;
+        case 'share':
+            share();
+            break;
         case 'addEvent':
             addEvent(args[0], args[1]);
             break;
@@ -30,20 +33,59 @@ function openModal(type, ...args) {
     }
 }
 
+function share() {
+    modal_title.innerText = 'Share Calendar';
+    modal_body.innerHTML = `
+    <div class="form-group">
+      <label for="share-username">Who do you want to share with?</label>
+      <input type="password" class="form-control" name="password" id="share-username" placeholder="Enter their username">
+    </div>
+    <div class="alert alert-primary" role="alert" id="alert" hidden></div>
+    `;
+    modal_footer.innerHTML = `
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <input type="submit" id="share-submit" class="btn btn-primary" value="Submit"/>
+    `;
+    const submit_button = document.getElementById('share-submit');
+    const alert_banner = document.getElementById('alert');
+    submit_button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const share_username = document.getElementById('share-username').value;
+        // post login request
+        Ajax.post({share_username})
+            .then(r => {
+                if (r.status === false) {
+                    // login error
+                    alert_banner.innerText = `Error: ${r.message}`;
+                    alert_banner.hidden = false;
+                    setTimeout(() => {
+                        alert_banner.hidden = true
+                    }, 3000);
+                } else {
+                    // hide modal
+                    $('#modal').modal('hide');
+                    // update calendar
+                    Calendar.getCalendar(month.date_object);
+                }
+            });
+    });
+}
+
 function about() {
     modal_title.innerText = 'About';
     modal_body.innerHTML = `
 This is a web calendar app.
 <ul>
 <li>To create an account, click on <strong>sign up</strong></li>
-<li> To create an event on a specific date, click on the cell of the date
+<li> To create an event, click on the cell
 <li> To edit an event, click on the event title
-<li> Tester accounts: 
-<ol>
-<li>222 (password: 222)</li>
-<li>333 (password: 333)</li>
-</ol>
+<li> To share you calendar, click on actions -> share</li>
 </ul>
+Tester accounts: 
+<ol>
+<li>Username: 222 (password: 222)</li>
+<li>Username: 333 (password: 333)</li>
+</ol>
     © Ethan Zheng 2020 All Rights Reserved
     `;
     modal_footer.innerHTML = `

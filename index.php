@@ -5,6 +5,31 @@ require_once('src/header.php');
 // Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
 
+// share calendar
+if (isset($data['share_username'])) {
+    $response = [];
+    $share_username = $data['share_username'];
+    $owner_user = User::selectUserById($session->getUserId());
+    $shared_user = User::selectUserByUsername($share_username);
+    if (empty($shared_user)) {
+        $response = ['status' => false, 'message' => 'User does not exist'];
+    } else {
+        $owner_user_id = $owner_user[0]->getId();
+        $shared_user_id = $shared_user[0]->getId();
+        if ($owner_user_id == $shared_user_id) {
+            $response = ['status' => false, 'message' => 'Cannot share calendar with yourself'];
+        } else {
+            $status = SharedCalendar::createSharedCalendar($owner_user_id, $shared_user_id);
+            if ($status) {
+                $response = ['status' => true];
+            } else {
+                $response = ['status' => false, 'message' => 'Failed to share calendar'];
+            }
+        }
+    }
+    respondJson($response);
+}
+
 // delete event
 if (isset($data['delete_event'])) {
     $nth = $data['nth'];
@@ -12,6 +37,7 @@ if (isset($data['delete_event'])) {
     $event = Event::selectEventByUserDateNth($session->getUserId(), $event_date, $nth)[0];
     $event_id = $event->getId();
     $status = Event::deleteEvent($event_id);
+    $response = [];
     if ($status) {
         $response = ['status' => true];
     } else {
@@ -205,8 +231,8 @@ function respondJson($response)
                     Actions
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" data-toggle="modal" data-target="#modal">Create event</a>
-                    <a class="dropdown-item" data-toggle="modal" data-target="#modal">Share calendar</a>
+                    <a class="dropdown-item" id="share-calendar" data-toggle="modal" data-target="#modal">Share
+                        calendar</a>
                 </div>
             </li>
         </ul>
@@ -248,12 +274,7 @@ function respondJson($response)
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <button id="prev-month" class="btn btn-secondary">New event</button>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <h5>Tags</h5>
+                    <button id="new-event" class="btn btn-secondary">New event</button>
                 </div>
             </div>
             <div class="row mt-3">
