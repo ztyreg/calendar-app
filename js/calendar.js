@@ -41,7 +41,7 @@ class Calendar {
                                     });
                                     // 2. then append to cell
                                     events_of_day.forEach(event => {
-                                        daily += `<br><div class="event-banner">${event.title}</div>`;
+                                        daily += `<div class="event-banner bg-light">&bull; ${event.title}</div>`;
                                     });
                                     // show cell content
                                     calendar.rows[i].cells[j].innerHTML = daily;
@@ -72,10 +72,7 @@ class Calendar {
      * @returns {string}
      */
     static formatDate(date) {
-        return date.getFullYear() + '-' +
-            (date.getMonth() < 9 ? '0' : '') +
-            (date.getMonth() + 1) + '-' +
-            date.getDate();
+        return date.toISOString().slice(0,10);
     }
 
     /**
@@ -107,5 +104,12 @@ class Calendar {
     static addDay(date, n) {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + n);
     }
+
+    static addDayArr(date, index_arr) {
+        const row = index_arr[0], col = index_arr[1];
+        const n = (row - 1) * 7 + col;
+        return Calendar.addDay(date, n);
+    }
+
 
 }

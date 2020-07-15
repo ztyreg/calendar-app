@@ -70,11 +70,17 @@ function loadCalendarListeners() {
     // show active cell
     calendar_body.addEventListener('mouseover', (e) => {
         const cell = e.target;
+        if (cell.classList.contains('event-banner')) {
+            cell.classList.remove('bg-light');
+        }
         cell.classList.add('bg-secondary');
     });
     calendar_body.addEventListener('mouseout', (e) => {
         const cell = e.target;
         cell.classList.remove('bg-secondary');
+        if (cell.classList.contains('event-banner')) {
+            cell.classList.add('bg-light');
+        }
     });
     // click active cell
     calendar_body.addEventListener('mouseup', (e) => {
@@ -85,7 +91,7 @@ function loadCalendarListeners() {
         Ajax.post({check_login: true})
             .then(r => {
                 if (r.status === true) {
-                    openModal('addEvent', col, row);
+                    openModal('addEvent', row, col);
                 } else {
                     openModal('pleaseLogin');
                 }

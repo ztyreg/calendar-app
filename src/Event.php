@@ -65,20 +65,22 @@ class Event
 
 
     /**
-     * Create user
-     * @param $username
-     * @param $password
+     * Create event
+     * @param $user_id
+     * @param $title
+     * @param $date
+     * @param $time
+     * @param $description
      * @return mixed execution status
      */
-    public static function createUser($username, $password)
+    public static function createEvent($user_id, $title, $date, $time, $description)
     {
         global $database;
-        $username = $database->escapeString($username);
-        $password = $database->escapeString($password);
-        $password = password_hash($password, PASSWORD_DEFAULT);
+        $title = $database->escapeString($title);
         // prepare statement
-        $stmt = $database->conn->prepare("INSERT INTO users (username, password) values (?, ?)");
-        $stmt->bind_param('ss', $username, $password);
+        $stmt = $database->conn->prepare(
+            "INSERT INTO events (user_id, title, date, time, description) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssss', $user_id, $title, $date, $time, $description);
         return $stmt->execute();
     }
 

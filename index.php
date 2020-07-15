@@ -2,7 +2,33 @@
 require_once('src/header.php');
 
 
+// Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
+
+// new event
+if (isset($data['new_event'])) {
+    $event_title = $data['event_title'];
+    $event_date = $data['event_date'];
+    $event_time = $data['event_time'];
+    $event_description = $data['event_description'];
+    $response = [];
+    if (empty($event_title)) {
+        $response = ['status' => false, 'message' => 'Title cannot be empty!'];
+    } elseif (empty($event_date)) {
+        $response = ['status' => false, 'message' => 'Date cannot be empty!'];
+    } elseif (empty($event_time)) {
+        $response = ['status' => false, 'message' => 'Time cannot be empty!'];
+    } else {
+        $status = Event::createEvent(
+                $session->getUserId(), $event_title, $event_date, $event_time, $event_description);
+        if ($status) {
+            $response = ['status' => true];
+        } else {
+            $response = ['status' => false, 'message' => 'Failed to create event'];
+        }
+    }
+    respondJson($response);
+}
 
 // get events in a range of days
 if (isset($data['event_start_date'])) {
@@ -114,7 +140,8 @@ function respondJson($response)
             <li class="nav-item active">
                 <a class="nav-link" href="#calendar">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item"><a class="nav-link" id="about-link" data-toggle="modal" data-target="#modal">About</a></li>
+            <li class="nav-item"><a class="nav-link" id="about-link" data-toggle="modal" data-target="#modal">About</a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
