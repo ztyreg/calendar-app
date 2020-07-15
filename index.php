@@ -47,6 +47,10 @@ if (isset($data['select_shared_calendars'])) {
 if (isset($data['share_username'])) {
     $response = [];
     $share_username = $data['share_username'];
+    if (!$session->checkLogin()) {
+        $response = ['status' => false, 'message' => 'Please login first'];
+        respondJson($response);
+    }
     $owner_user = User::selectUserById($session->getUserId());
     $shared_user = User::selectUserByUsername($share_username);
     if (empty($shared_user)) {
