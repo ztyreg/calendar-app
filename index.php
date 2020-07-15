@@ -261,7 +261,7 @@ function respondJson($response)
             </li>
             <li class="nav-item"><a class="nav-link" id="about-link" data-toggle="modal" data-target="#modal">About</a>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" id="actions">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Actions
