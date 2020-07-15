@@ -348,7 +348,7 @@ function addEvent(row, col) {
             return;
         }
         // post new event request
-        Ajax.post({new_event: true, event_title, event_date, event_time, event_description})
+        Ajax.post({new_event: true, event_title, event_date, event_time, event_description, token})
             .then(r => {
                 if (r.status === false) {
                     // error
@@ -440,7 +440,7 @@ function editEvent(row, col, nth) {
         // post new event request
         Ajax.post({
             update_event: true,
-            nth, new_event_date, event_title, event_date, event_time, event_description
+            nth, new_event_date, event_title, event_date, event_time, event_description, token
         })
             .then(r => {
                 if (r.status === false) {
@@ -461,7 +461,7 @@ function editEvent(row, col, nth) {
     delete_button.addEventListener('click', (e) => {
         e.preventDefault();
         // post new event request
-        Ajax.post({delete_event: true, nth, event_date})
+        Ajax.post({delete_event: true, nth, event_date, token})
             .then(r => {
                 if (r.status === false) {
                     // error

@@ -5,6 +5,7 @@ require_once('src/header.php');
 // Get POST data in JSON format
 $data = json_decode(file_get_contents('php://input'), true);
 
+
 // get events in a range of days
 if (isset($data['view_calendar'])) {
     $username = $data['username'];
@@ -64,7 +65,7 @@ if (isset($data['share_username'])) {
 }
 
 // delete event
-if (isset($data['delete_event'])) {
+if (isset($data['delete_event']) && $session->verifyToken($data['token'])) {
     $nth = $data['nth'];
     $event_date = $data['event_date'];
     $event = Event::selectEventByUserDateNth($session->getUserId(), $event_date, $nth)[0];
@@ -80,7 +81,7 @@ if (isset($data['delete_event'])) {
 }
 
 // update event
-if (isset($data['update_event'])) {
+if (isset($data['update_event']) && $session->verifyToken($data['token'])) {
     $nth = $data['nth'];
     $new_event_date = $data['new_event_date'];
     $event_title = $data['event_title'];
@@ -123,7 +124,7 @@ if (isset($data['select_event_date_nth'])) {
 }
 
 // new event
-if (isset($data['new_event'])) {
+if (isset($data['new_event']) && $session->verifyToken($data['token'])) {
     $event_title = $data['event_title'];
     $event_date = $data['event_date'];
     $event_time = $data['event_time'];
@@ -419,6 +420,9 @@ function respondJson($response)
     </div>
 </div>
 
+<script type="text/javascript">
+    const token = "<?php echo $session->getToken(); ?>";
+</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
