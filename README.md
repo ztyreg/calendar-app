@@ -15,12 +15,14 @@ Tester Accounts:
 Calendar View
 * The calendar is displayed as a table grid with days as the columns and weeks as the rows, one month at a time 
 * The user can view different months as far in the past or future as desired 
+
 User and Event Management
 * Events can be added, modified, and deleted 
 * Events have a title, date, and time 
 * Users can log into the site, and they cannot view or manipulate events associated with other users 
 * All actions are performed over AJAX, without ever needing to reload the page 
 * Refreshing the page does not log a user out 
+
 Best Practices 
 * Code is well formatted and easy to read, with proper commenting 
 * If storing passwords, they are stored salted and hashed 
@@ -30,6 +32,7 @@ Best Practices
 * CSRF tokens are passed when adding/editing/deleting events 
 * Session cookie is HTTP-Only 
 * Page passes the W3C validator 
+
 Other features:
 * The calendar always starts with Monday and ends with Sunday.
 So the user can also edit the last few days of the previous month and the first few days of the next month
