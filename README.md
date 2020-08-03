@@ -1,4 +1,4 @@
-# Calendar App
+# Calendar App (Currently only Supported by Chrome and Firefox)
 
 ## Login Credentials
 
