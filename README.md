@@ -4,7 +4,7 @@
 
 URL: http://3.22.235.98/cse330/module5/calendar/index.php
 
-(Please use Chrome or Firefox since it uses some ES6 features)
+**(Please use Chrome or Firefox since it uses some ES6 features)**
 
 Tester Accounts:
 * Username 222 (password: 222)
