@@ -1,15 +1,16 @@
 # Calendar App (Currently only Supported by Chrome and Firefox)
 
-## Login Credentials
+[comment]: <> (## Login Credentials)
 
-URL: http://3.22.235.98/cse330/module5/calendar/index.php
+[comment]: <> (URL: http://3.22.235.98/cse330/module5/calendar/index.php)
 
-**(Please use Chrome or Firefox since it uses some ES6 features)**
+[comment]: <> (**(Please use Chrome or Firefox since it uses some ES6 features)**)
 
-Tester Accounts:
-* Username 222 (password: 222)
-* Username 333 (password: 333)
-* Feel free to create new accounts
+[comment]: <> (Tester Accounts:)
+[comment]: <> (* Username 222 (password: 222))
+[comment]: <> (* Username 333 (password: 333))
+[comment]: <> (* Feel free to create new accounts)
+
 
 ## Features
 
