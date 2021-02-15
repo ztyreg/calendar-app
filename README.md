@@ -1,5 +1,9 @@
 # Calendar App (Currently only Supported by Chrome and Firefox)
 
+## Introduction
+
+A canlendar app using JavaScript and PHP. Supports event editing and calendar sharing.
+
 ## Screenshot
 <img src="https://www.tzheng.org/media/portfolio/images/calendar.jpg" width="500"/>
 
