@@ -1,6 +1,6 @@
 # Calendar App (Currently only Supported by Chrome and Firefox)
 
-<img src="https://www.tzheng.org/media/portfolio/images/calendar.jpg"/>
+<img src="https://www.tzheng.org/media/portfolio/images/calendar.jpg" width="500"/>
 
 ## Features
 
